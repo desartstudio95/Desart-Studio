@@ -2,120 +2,145 @@
 
 :root {
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --primary-blue: #2563EB;
-  --primary-navy: #0B1528;
-  --deep-navy: #020617;
+  --font-display: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --electric-blue: #4599FF;
+  --deep-navy: #071A33;
+  --secondary-navy: #102B4D;
+  --obsidian-navy: #041022;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   font-family: var(--font-sans);
-  color: #f8fafc;
-  background-color: #020617;
+  color: #ffffff;
+  background-color: #071A33;
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, .font-display {
   font-family: var(--font-display);
 }
 
-.font-display {
-  font-family: var(--font-display);
+.text-balance {
+  text-wrap: balance;
 }
 
-/* Deep Dark Blue Neo-Glass & Refractive Glassmorphism */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Selective Glassmorphism aligned with DESART STUDIO palette (#071A33 / #102B4D / #4599FF) */
+.studio-glass {
+  background: rgba(16, 43, 77, 0.42);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(69, 153, 255, 0.18);
+  box-shadow: 0 24px 48px -16px rgba(2, 10, 24, 0.72);
+}
+
+.studio-surface {
+  background: linear-gradient(180deg, rgba(16, 43, 77, 0.55) 0%, rgba(7, 26, 51, 0.78) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 44px -18px rgba(2, 10, 24, 0.75);
+}
+
+.studio-surface-hover {
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), border-color 180ms cubic-bezier(0.16, 1, 0.3, 1), background-color 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.studio-surface-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgba(69, 153, 255, 0.42);
+}
+
+/* Subtle Architectural Grid */
+.studio-grid {
+  background-image:
+    linear-gradient(to right, rgba(69, 153, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(69, 153, 255, 0.06) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Cinematic Atmospheric Animations (Compositor-only: transform & opacity) */
+@keyframes waveDrift {
+  0%, 100% {
+    transform: translate3d(-2%, 0, 0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate3d(2%, -2%, 0) scale(1.04);
+    opacity: 0.65;
+  }
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate3d(0, -18px, 0);
+    opacity: 0.7;
+  }
+}
+
+@keyframes gentleOrbit {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-wave-drift {
+  animation: waveDrift 14s ease-in-out infinite;
+}
+
+.animate-particle {
+  animation: particleFloat 7s ease-in-out infinite;
+}
+
+.animate-orbit-slow {
+  animation: gentleOrbit 36s linear infinite;
+}
+
+/* Legacy utility classes retained for CustomerPortal / AdminDashboard compatibility */
 .ethereal-canvas {
-  background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.24) 0%, rgba(29, 78, 216, 0.16) 25%, rgba(11, 25, 54, 0.75) 60%, #020617 100%);
+  background: radial-gradient(circle at 50% 0%, rgba(69, 153, 255, 0.2) 0%, rgba(16, 43, 77, 0.5) 35%, #071A33 100%);
 }
 
 .neo-glass {
-  background: rgba(8, 19, 44, 0.45);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(147, 197, 253, 0.15);
-  box-shadow: 0 20px 50px rgba(2, 6, 23, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-}
-
-.neo-glass-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.neo-glass-hover:hover {
-  background: rgba(14, 30, 68, 0.6);
-  border-color: rgba(96, 165, 250, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 25px 60px rgba(2, 6, 23, 0.8), 0 0 30px rgba(37, 99, 235, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  background: rgba(16, 43, 77, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(69, 153, 255, 0.16);
 }
 
 .neo-glass-card {
-  background: linear-gradient(135deg, rgba(15, 29, 64, 0.55) 0%, rgba(7, 16, 38, 0.35) 100%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(147, 197, 253, 0.14);
-  box-shadow: 0 20px 40px -10px rgba(2, 6, 23, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, rgba(16, 43, 77, 0.55) 0%, rgba(7, 26, 51, 0.45) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(69, 153, 255, 0.14);
 }
 
-.neo-glass-pill {
-  background: rgba(15, 30, 68, 0.5);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(147, 197, 253, 0.18);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+/* Accessibility: Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-wave-drift,
+  .animate-particle,
+  .animate-orbit-slow,
+  .animate-spin,
+  .animate-pulse,
+  .animate-ping {
+    animation: none !important;
+  }
+  .studio-surface-hover:hover {
+    transform: none;
+  }
 }
-
-/* 3D Glass Spheres in Deep Dark Blue / Sapphire */
-.glass-sphere {
-  border-radius: 9999px;
-  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.85) 0%, rgba(147, 197, 253, 0.4) 25%, rgba(59, 130, 246, 0.25) 50%, rgba(10, 25, 60, 0.1) 80%, rgba(255, 255, 255, 0.3) 100%);
-  box-shadow: 
-    inset 0 -10px 20px rgba(29, 78, 216, 0.45),
-    inset 0 10px 15px rgba(255, 255, 255, 0.65),
-    0 15px 35px rgba(2, 6, 23, 0.6);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-}
-
-.glass-sphere-subtle {
-  border-radius: 9999px;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.5) 0%, rgba(147, 197, 253, 0.2) 30%, rgba(29, 78, 216, 0.1) 70%, rgba(255, 255, 255, 0.18) 100%);
-  box-shadow: inset 0 4px 8px rgba(255, 255, 255, 0.4), 0 8px 20px rgba(2, 6, 23, 0.4);
-  border: 1px solid rgba(147, 197, 253, 0.25);
-  backdrop-filter: blur(6px);
-}
-
-/* Custom glowing effects */
-.glow-blue-deep {
-  box-shadow: 0 0 50px -10px rgba(37, 99, 235, 0.45), 0 0 30px -5px rgba(59, 130, 246, 0.35);
-}
-
-.glow-ambient {
-  filter: drop-shadow(0 0 40px rgba(147, 197, 253, 0.25));
-}
-
-/* Floating animation */
-@keyframes floatSlow {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(2deg); }
-}
-
-@keyframes floatReverse {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(8px) rotate(-2deg); }
-}
-
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 0.9; transform: scale(1.04); }
-}
-
-.animate-float-slow {
-  animation: floatSlow 6s ease-in-out infinite;
-}
-
-.animate-float-reverse {
-  animation: floatReverse 7s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 4s ease-in-out infinite;
-}
-

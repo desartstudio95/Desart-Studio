@@ -205,7 +205,16 @@ const db = {
     revenue: "4.620.000 MT",
     pendingPayments: "42.500 MT",
     tickets: 12
-  }
+  },
+  contacts: [] as Array<{
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    service: string;
+    message: string;
+    createdAt: string;
+  }>
 };
 
 // API Routes
@@ -410,6 +419,52 @@ app.post("/api/billing/pay", (req, res) => {
   });
 });
 
+// Portal compatibility list endpoints
+app.get("/api/domains/list", (req, res) => {
+  res.json({ domains: db.domains });
+});
+
+app.get("/api/mailboxes/list", (req, res) => {
+  res.json({ mailboxes: db.mailboxes });
+});
+
+app.get("/api/invoices/list", (req, res) => {
+  res.json({ invoices: db.invoices });
+});
+
+app.get("/api/tickets/list", (req, res) => {
+  res.json({ tickets: db.tickets });
+});
+
+// Public Contact & Quotation Request endpoint
+app.post("/api/contact", (req, res) => {
+  const { name, email, phone, service, message } = req.body;
+  if (!name || !String(name).trim() || !message || !String(message).trim()) {
+    return res.status(400).json({ error: "Nome e mensagem são obrigatórios." });
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(String(email).trim())) {
+    return res.status(400).json({ error: "Por favor, introduza um endereço de email válido." });
+  }
+
+  const inquiry = {
+    id: `INQ-${Date.now()}`,
+    name: String(name).trim(),
+    email: String(email).trim(),
+    phone: String(phone || "").trim(),
+    service: String(service || "Geral").trim(),
+    message: String(message).trim(),
+    createdAt: new Date().toISOString()
+  };
+
+  db.contacts.unshift(inquiry);
+  res.status(201).json({
+    success: true,
+    reference: inquiry.id,
+    message: "Pedido recebido com sucesso. A nossa equipa responderá em breve."
+  });
+});
+
 // Support Ticket System
 app.get("/api/tickets", (req, res) => {
   res.json({ tickets: db.tickets });
@@ -492,18 +547,18 @@ app.post("/api/ai/assistant", async (req, res) => {
     if (!ai) {
       // Fallback if no API key is provided
       return res.json({
-        text: `Como assistente tecnológico do ecossistema DESART STUDIO, posso auxiliá-lo na configuração de domínios (.co.mz, .mz), parametrização de caixas DESART Mail com criptografia DKIM/SPF, gestão de servidores e suporte técnico.`
+        reply: `A DESART STUDIO especializa-se em três áreas principais: DESART DESIGN (logótipos, identidade visual e materiais gráficos), DESART WEB (websites corporativos, landing pages, portfólios e e-commerce) e DESART HOST (registo de domínios, hospedagem web/WordPress, SSL e gestão DNS). Pode também falar connosco via WhatsApp (+258 833 081 636).`,
+        text: `A DESART STUDIO especializa-se em três áreas principais: DESART DESIGN (logótipos, identidade visual e materiais gráficos), DESART WEB (websites corporativos, landing pages, portfólios e e-commerce) e DESART HOST (registo de domínios, hospedagem web/WordPress, SSL e gestão DNS).`
       });
     }
 
-    const systemInstruction = `Você é o DESART AI CORE, o assistente de inteligência e arquitetura de infraestrutura digital da DESART STUDIO (Moçambique).
-Seu tom é extremamente profissional, tecnológico, polido e confiante (semelhante ao estilo Apple e Stripe para o mercado africano e global).
-Você entende profundamente de:
-1. Registo e gestão de domínios (.co.mz, .mz, .com, .africa, DNS, MX, SPF, DKIM, DMARC)
-2. DESART Mail & Email Profissional corporativo (IMAP 993, SMTP 465, TLS/SSL, 15GB de cota, antispam)
-3. Desenvolvimento de websites empresariais e plataformas SaaS (React, Tailwind, Node.js)
-4. Sistemas de gestão de negócios, ERPs, POS e integrações de pagamentos locais (M-Pesa, e-Mola, Bancos de Moçambique).
-Responda com concisão, clareza técnica e precisão em Português.`;
+    const systemInstruction = `Você é o assistente digital da DESART STUDIO (Moçambique).
+Seu tom é profissional, claro, polido e confiante.
+A DESART STUDIO concentra-se exclusivamente em 3 categorias comerciais:
+1. DESART DESIGN: design de logótipos, identidade visual e corporativa, cartazes publicitários, flyers, banners, cartões de visita, catálogos, gráficos para redes sociais e materiais de marketing.
+2. DESART WEB: landing pages, websites corporativos e empresariais, portfólios profissionais, websites e-commerce, redesign e manutenção de websites.
+3. DESART HOST: registo e gestão de domínios (.co.mz, .mz, .com, .africa), hospedagem web e WordPress com painel DirectAdmin, gestão DNS, certificados SSL, renovações e assistência técnica.
+Responda em Português com clareza e precisão.`;
 
     const response = await ai.models.generateContent({
       model: "gemini-3.8-flash",
@@ -513,7 +568,7 @@ Responda com concisão, clareza técnica e precisão em Português.`;
       }
     });
 
-    res.json({ text: response.text });
+    res.json({ reply: response.text, text: response.text });
   } catch (error: any) {
     console.error("Gemini AI error:", error);
     res.status(500).json({

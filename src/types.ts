@@ -95,18 +95,29 @@ export interface CustomerAccount {
   joinedDate: string;
 }
 
-export type AppView = 
+export type AppView =
+  | 'home'
+  | 'services'
+  | 'design-grafico'
+  | 'criacao-de-websites'
+  | 'hospedagem'
+  | 'dominios'
+  | 'portfolio'
+  | 'sobre'
+  | 'contactos'
+  | 'privacidade'
+  | 'customer-portal'
+  | 'admin-dashboard'
+  // Legacy compatibility views
   | 'website'
   | 'service-domains'
   | 'service-mail'
   | 'service-websites'
   | 'service-design'
   | 'service-apps'
-  | 'service-support'
-  | 'customer-portal'
-  | 'admin-dashboard';
+  | 'service-support';
 
-export type PortalTab = 
+export type PortalTab =
   | 'overview'
   | 'domains'
   | 'email'
@@ -115,7 +126,7 @@ export type PortalTab =
   | 'support'
   | 'settings';
 
-export type AdminTab = 
+export type AdminTab =
   | 'dashboard'
   | 'customers'
   | 'domains'
@@ -127,3 +138,16 @@ export type AdminTab =
   | 'tickets'
   | 'integrations'
   | 'settings';
+
+export interface PortfolioProject {
+  id: string;
+  title: string;
+  category: 'Design Gráfico' | 'Identidade Visual' | 'Websites' | 'Publicidade';
+  typeLabel: string;
+  summary: string;
+  description: string;
+  deliverables: string[];
+  image: string;
+  isDemo: boolean;
+  year: string;
+}

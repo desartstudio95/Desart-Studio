@@ -1,182 +1,215 @@
 import React from 'react';
-import { 
-  Globe, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  ShieldCheck, 
-  CheckCircle2, 
-  ArrowUpRight,
-  Server,
-  Layers
-} from 'lucide-react';
+import { Phone, Mail, Instagram, Linkedin, Facebook, ArrowUpRight } from 'lucide-react';
 import { AppView } from '../../types';
+import {
+  VIEW_TO_PATH,
+  WHATSAPP_DISPLAY,
+  STUDIO_EMAIL,
+  getWhatsAppUrl,
+} from '../../data/studioData';
 
 interface FooterProps {
   onNavigate: (view: AppView) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const handleLink = (e: React.MouseEvent, view: AppView) => {
+    e.preventDefault();
+    onNavigate(view);
+  };
+
   return (
-    <footer className="bg-[#050B16] text-slate-300 relative overflow-hidden border-t border-slate-800">
-      {/* Background ambient glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-blue-500/10 blur-[140px] pointer-events-none"></div>
+    <footer className="bg-[#041022] text-slate-300 border-t border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/10">
+          {/* Brand Column */}
+          <div className="lg:col-span-5 space-y-4">
+            <a
+              href={VIEW_TO_PATH.home}
+              onClick={(e) => handleLink(e, 'home')}
+              className="inline-block text-xl font-extrabold tracking-tight text-white font-display"
+            >
+              DESART STUDIO
+            </a>
 
-      {/* Large background typography: "DESART" with low opacity */}
-      <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 select-none pointer-events-none opacity-[0.03] text-[180px] sm:text-[240px] font-extrabold tracking-tighter text-white font-display whitespace-nowrap">
-        DESART
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-16 border-b border-slate-800/80">
-          
-          {/* Col 1: Brand & Tagline */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => onNavigate('website')}>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#102447] to-[#4599FF] flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
-                <div className="relative flex items-center justify-center">
-                  <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" style={{ animationDuration: '9s' }}></div>
-                  <div className="absolute w-1.5 h-1.5 rounded-full bg-white"></div>
-                </div>
-              </div>
-              <div className="flex items-center space-x-1.5">
-                <span className="font-extrabold text-2xl tracking-tight text-white font-display">DESART</span>
-                <span className="text-xs font-bold tracking-widest text-[#4599FF] px-2 py-0.5 rounded bg-blue-900/40 border border-blue-500/30">STUDIO</span>
-              </div>
-            </div>
-
-            <p className="text-sm text-slate-400 font-medium italic">
-              "A sua presença digital, completa."
+            <p className="text-sm font-medium text-[#4599FF]">
+              Digital solutions. Designed to grow.
             </p>
 
-            <p className="text-xs text-slate-400 leading-relaxed max-w-md">
-              Domínios, e-mail profissional, websites, design e tecnologia empresarial num único ecossistema integrado. Infraestrutura de classe mundial pensada para empresas de Moçambique e além-fronteiras.
+            <p className="text-sm text-slate-400 leading-relaxed max-w-md">
+              Design gráfico, criação de websites e soluções de hospedagem e domínios para marcas que querem crescer com solidez no ambiente digital.
             </p>
 
-            {/* Direct Contact */}
-            <div className="pt-2 space-y-2 text-xs text-slate-300">
-              <div className="flex items-center space-x-2.5">
+            <div className="pt-2 space-y-2 text-sm text-slate-300">
+              <a
+                href={getWhatsAppUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 hover:text-[#4599FF] transition-colors w-fit"
+              >
                 <Phone className="w-4 h-4 text-[#4599FF]" />
-                <span className="font-semibold text-white">833 081 636</span>
-                <span className="text-slate-500 text-[11px]">(Moçambique / WhatsApp disponível)</span>
-              </div>
-              <div className="flex items-center space-x-2.5">
+                <span>WhatsApp: {WHATSAPP_DISPLAY}</span>
+              </a>
+              <a
+                href={`mailto:${STUDIO_EMAIL}`}
+                className="flex items-center gap-2.5 hover:text-[#4599FF] transition-colors w-fit"
+              >
                 <Mail className="w-4 h-4 text-[#4599FF]" />
-                <span>contacto@desartstudio.co.mz</span>
-              </div>
-              <div className="flex items-center space-x-2.5">
-                <MapPin className="w-4 h-4 text-[#4599FF]" />
-                <span>Maputo • Moçambique • Hub Tecnológico</span>
-              </div>
-            </div>
-
-            {/* Infrastructure badge */}
-            <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 text-xs text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>DESART Mail & REGISTAR Core API: <strong className="text-emerald-400">100% Operacional</strong></span>
+                <span>{STUDIO_EMAIL}</span>
+              </a>
             </div>
           </div>
 
-          {/* Col 2: Services */}
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Serviços</h3>
-            <ul className="space-y-2.5 text-xs">
+          {/* Navigation Column */}
+          <div className="lg:col-span-3 space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-white font-display">
+              Navegação
+            </h3>
+            <ul className="space-y-2.5 text-sm">
               <li>
-                <button onClick={() => onNavigate('service-domains')} className="hover:text-[#4599FF] transition-colors flex items-center space-x-1 text-slate-400">
-                  <span>Registo de Domínios (.co.mz)</span>
-                </button>
+                <a
+                  href={VIEW_TO_PATH.home}
+                  onClick={(e) => handleLink(e, 'home')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Início
+                </a>
               </li>
               <li>
-                <button onClick={() => onNavigate('service-mail')} className="hover:text-[#4599FF] transition-colors flex items-center space-x-1 text-slate-400">
-                  <span>DESART MAIL (15GB/caixa)</span>
-                </button>
+                <a
+                  href={VIEW_TO_PATH['design-grafico']}
+                  onClick={(e) => handleLink(e, 'design-grafico')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Design Gráfico
+                </a>
               </li>
               <li>
-                <button onClick={() => onNavigate('service-websites')} className="hover:text-[#4599FF] transition-colors flex items-center space-x-1 text-slate-400">
-                  <span>Websites Corporativos</span>
-                </button>
+                <a
+                  href={VIEW_TO_PATH['criacao-de-websites']}
+                  onClick={(e) => handleLink(e, 'criacao-de-websites')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Websites
+                </a>
               </li>
               <li>
-                <button onClick={() => onNavigate('service-design')} className="hover:text-[#4599FF] transition-colors flex items-center space-x-1 text-slate-400">
-                  <span>Design Gráfico & Branding</span>
-                </button>
+                <a
+                  href={VIEW_TO_PATH.hospedagem}
+                  onClick={(e) => handleLink(e, 'hospedagem')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Hospedagem
+                </a>
               </li>
               <li>
-                <button onClick={() => onNavigate('service-apps')} className="hover:text-[#4599FF] transition-colors flex items-center space-x-1 text-slate-400">
-                  <span>Sistemas ERP & Aplicações</span>
-                </button>
+                <a
+                  href={VIEW_TO_PATH.dominios}
+                  onClick={(e) => handleLink(e, 'dominios')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Domínios
+                </a>
               </li>
               <li>
-                <button onClick={() => onNavigate('service-support')} className="hover:text-[#4599FF] transition-colors flex items-center space-x-1 text-slate-400">
-                  <span>Suporte & Manutenção 24/7</span>
-                </button>
+                <a
+                  href={VIEW_TO_PATH.portfolio}
+                  onClick={(e) => handleLink(e, 'portfolio')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Portfólio
+                </a>
+              </li>
+              <li>
+                <a
+                  href={VIEW_TO_PATH.contactos}
+                  onClick={(e) => handleLink(e, 'contactos')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Contactos
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Company & Platform */}
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Plataforma</h3>
-            <ul className="space-y-2.5 text-xs">
-              <li>
-                <button onClick={() => onNavigate('customer-portal')} className="hover:text-[#4599FF] transition-colors flex items-center space-x-1 text-slate-400">
-                  <span>Portal do Cliente (clientes)</span>
-                  <ArrowUpRight className="w-3 h-3 text-slate-500" />
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onNavigate('admin-dashboard')} className="hover:text-[#4599FF] transition-colors flex items-center space-x-1 text-slate-400">
-                  <span>Painel de Controlo Admin</span>
-                  <ArrowUpRight className="w-3 h-3 text-slate-500" />
-                </button>
-              </li>
-              <li>
-                <span className="text-slate-400 hover:text-white cursor-pointer">Sobre a DESART STUDIO</span>
-              </li>
-              <li>
-                <span className="text-slate-400 hover:text-white cursor-pointer">Portfólio de Tecnologia</span>
-              </li>
-              <li>
-                <span className="text-slate-400 hover:text-white cursor-pointer">Perguntas Frequentes (FAQ)</span>
-              </li>
-              <li>
-                <span className="text-slate-400 hover:text-white cursor-pointer">Métodos de Pagamento (M-Pesa, e-Mola)</span>
-              </li>
-            </ul>
-          </div>
+          {/* Social & Client Platform Column */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-white font-display">
+                Redes Sociais & Legal
+              </h3>
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://www.instagram.com/desartstudio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram da DESART STUDIO"
+                  className="w-10 h-10 rounded-lg bg-[#102B4D]/60 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:border-[#4599FF] transition-colors"
+                >
+                  <Instagram className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://www.facebook.com/desartstudio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook da DESART STUDIO"
+                  className="w-10 h-10 rounded-lg bg-[#102B4D]/60 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:border-[#4599FF] transition-colors"
+                >
+                  <Facebook className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/desartstudio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn da DESART STUDIO"
+                  className="w-10 h-10 rounded-lg bg-[#102B4D]/60 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:border-[#4599FF] transition-colors"
+                >
+                  <Linkedin className="w-4 h-4" />
+                </a>
+              </div>
 
-          {/* Col 4: Legal & Security */}
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Segurança & Legal</h3>
-            <ul className="space-y-2.5 text-xs">
-              <li><span className="text-slate-400 hover:text-white cursor-pointer">Termos de Serviço</span></li>
-              <li><span className="text-slate-400 hover:text-white cursor-pointer">Política de Privacidade</span></li>
-              <li><span className="text-slate-400 hover:text-white cursor-pointer">Política de Domínios .MZ</span></li>
-              <li><span className="text-slate-400 hover:text-white cursor-pointer">Acordo de Nível de Serviço (SLA)</span></li>
-              <li><span className="text-slate-400 hover:text-white cursor-pointer">Auditoria de Segurança & 2FA</span></li>
-              <li className="pt-2">
-                <div className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 flex items-center space-x-2 text-[11px] text-slate-400">
-                  <ShieldCheck className="w-4 h-4 text-[#4599FF] shrink-0" />
-                  <span>Criptografia ponta a ponta TLS 1.3 & DKIM/SPF ativo</span>
-                </div>
-              </li>
-            </ul>
-          </div>
+              <div className="pt-1">
+                <a
+                  href={VIEW_TO_PATH.privacidade}
+                  onClick={(e) => handleLink(e, 'privacidade')}
+                  className="text-sm text-slate-400 hover:text-white transition-colors"
+                >
+                  Política de Privacidade
+                </a>
+              </div>
+            </div>
 
+            <div className="pt-4 border-t border-white/10 space-y-2">
+              <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Área Reservada
+              </div>
+              <div className="flex flex-wrap items-center gap-4 text-xs">
+                <button
+                  type="button"
+                  onClick={() => onNavigate('customer-portal')}
+                  className="inline-flex items-center gap-1 text-slate-300 hover:text-[#4599FF] transition-colors"
+                >
+                  <span>Portal do Cliente</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </button>
+                <span aria-hidden="true" className="text-slate-600">·</span>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('admin-dashboard')}
+                  className="inline-flex items-center gap-1 text-slate-400 hover:text-[#4599FF] transition-colors"
+                >
+                  <span>Administração</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Bottom Bar */}
+        {/* Bottom Copyright */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <div>
-            © {new Date().getFullYear()} DESART STUDIO. Todos os direitos reservados.
-          </div>
-          <div className="flex items-center space-x-4">
-            <span>Moeda: <strong className="text-slate-300">Metical Moçambicano (MT)</strong></span>
-            <span>•</span>
-            <span>Região: <strong className="text-slate-300">MZ-AFRICA</strong></span>
-            <span>•</span>
-            <span className="text-slate-400">DESART DIGITAL CORE v2.5</span>
-          </div>
+          <p>© {new Date().getFullYear()} DESART STUDIO. Todos os direitos reservados.</p>
+          <p>Design Gráfico · Criação de Websites · Hospedagem e Domínios</p>
         </div>
       </div>
     </footer>

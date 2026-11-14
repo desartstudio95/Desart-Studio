@@ -1,95 +1,130 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AppView } from './types';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
-import { EtherealHero } from './components/home/EtherealHero';
-import { InvestmentCalculator } from './components/home/InvestmentCalculator';
-import { InfrastructureProof } from './components/home/InfrastructureProof';
+import { CinematicHero } from './components/home/CinematicHero';
+import { ServicesOverviewSection } from './components/home/ServicesOverviewSection';
+import { PortfolioSection } from './components/home/PortfolioSection';
+import { WebsiteShowcaseSection } from './components/home/WebsiteShowcaseSection';
+import { HostingPricingSection } from './components/home/HostingPricingSection';
+import { AboutProcessSection } from './components/home/AboutProcessSection';
+import { ContactSection } from './components/home/ContactSection';
+import {
+  ServicesPage,
+  GraphicDesignPage,
+  WebDevelopmentPage,
+  HostingPage,
+  DomainsPage,
+  PortfolioPage,
+  AboutPage,
+  ContactPage,
+  PrivacyPage,
+} from './components/pages/PublicPages';
 import { CustomerPortal } from './components/portal/CustomerPortal';
 import { AdminDashboard } from './components/admin/AdminDashboard';
-import { ServiceDetailPage } from './components/services/ServiceDetailPage';
-import { AiAssistantModal } from './components/ai/AiAssistantModal';
-import { Bot } from 'lucide-react';
+import { ROUTE_SEO, VIEW_TO_PATH, pathToView } from './data/studioData';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<AppView>('website');
-  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [currentView, setCurrentView] = useState<AppView>(() =>
+    typeof window !== 'undefined' ? pathToView(window.location.pathname) : 'home'
+  );
 
-  // Scroll to top on view changes
-  useEffect(() => {
+  const navigateTo = useCallback((view: AppView) => {
+    const normalizedView: AppView = view === 'website' ? 'home' : view;
+    setCurrentView(normalizedView);
+
+    const targetPath = VIEW_TO_PATH[normalizedView] || '/';
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState({ view: normalizedView }, '', targetPath);
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  // Sync browser Back / Forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentView(pathToView(window.location.pathname));
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Update document title and meta description per route for SEO
+  useEffect(() => {
+    const seo = ROUTE_SEO[currentView] || ROUTE_SEO.home;
+    document.title = seo.title;
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', seo.description);
+    }
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', seo.title);
+    }
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) {
+      ogDesc.setAttribute('content', seo.description);
+    }
   }, [currentView]);
 
-  return (
-    <div className="min-h-screen flex flex-col bg-[#040812] text-slate-100 selection:bg-[#4599FF] selection:text-white">
-      
-      {/* Global Navbar */}
-      <Navbar 
-        currentView={currentView}
-        onNavigate={(view) => setCurrentView(view)}
-        onOpenAi={() => setAiModalOpen(true)}
-      />
+  const isHome = currentView === 'home' || currentView === 'website';
 
-      {/* Main Content Area based on View */}
+  return (
+    <div className="min-h-screen flex flex-col bg-[#071A33] text-white selection:bg-[#4599FF] selection:text-white">
+      {/* Global Navigation Bar */}
+      <Navbar currentView={currentView} onNavigate={navigateTo} />
+
+      {/* Main Content */}
       <main className="flex-1">
-        
-        {/* VIEW 1: Main Corporate Website & Ecosystem */}
-        {currentView === 'website' && (
+        {isHome && (
           <>
-            <EtherealHero 
-              onNavigate={(view) => setCurrentView(view)}
-              onOpenAi={() => setAiModalOpen(true)}
-            />
-            <InvestmentCalculator onNavigate={(view) => setCurrentView(view)} />
-            <InfrastructureProof onNavigate={(view) => setCurrentView(view)} />
+            <CinematicHero onNavigate={navigateTo} />
+            <ServicesOverviewSection onNavigate={navigateTo} />
+            <PortfolioSection onNavigate={navigateTo} />
+            <WebsiteShowcaseSection onNavigate={navigateTo} />
+            <HostingPricingSection onNavigate={navigateTo} />
+            <AboutProcessSection />
+            <ContactSection />
           </>
         )}
 
-        {/* VIEW 2: Dedicated Service Detail Pages */}
-        {currentView.startsWith('service-') && (
-          <ServiceDetailPage 
-            serviceId={currentView}
-            onNavigate={(view) => setCurrentView(view)}
-            onOpenAi={() => setAiModalOpen(true)}
-          />
+        {currentView === 'services' && <ServicesPage onNavigate={navigateTo} />}
+
+        {(currentView === 'design-grafico' || currentView === 'service-design') && (
+          <GraphicDesignPage onNavigate={navigateTo} />
         )}
 
-        {/* VIEW 3: Customer Portal (clientes.desartstudio.co.mz) */}
-        {currentView === 'customer-portal' && (
-          <CustomerPortal onNavigate={(view) => setCurrentView(view)} />
+        {(currentView === 'criacao-de-websites' ||
+          currentView === 'service-websites' ||
+          currentView === 'service-apps') && <WebDevelopmentPage onNavigate={navigateTo} />}
+
+        {(currentView === 'hospedagem' ||
+          currentView === 'service-support' ||
+          currentView === 'service-mail') && <HostingPage onNavigate={navigateTo} />}
+
+        {(currentView === 'dominios' || currentView === 'service-domains') && (
+          <DomainsPage onNavigate={navigateTo} />
         )}
 
-        {/* VIEW 4: Admin Dashboard (admin.desartstudio.co.mz) */}
-        {currentView === 'admin-dashboard' && (
-          <AdminDashboard onNavigate={(view) => setCurrentView(view)} />
-        )}
+        {currentView === 'portfolio' && <PortfolioPage onNavigate={navigateTo} />}
 
+        {currentView === 'sobre' && <AboutPage onNavigate={navigateTo} />}
+
+        {currentView === 'contactos' && <ContactPage onNavigate={navigateTo} />}
+
+        {currentView === 'privacidade' && <PrivacyPage onNavigate={navigateTo} />}
+
+        {/* Preserved Customer Portal */}
+        {currentView === 'customer-portal' && <CustomerPortal onNavigate={navigateTo} />}
+
+        {/* Preserved Administration Panel */}
+        {currentView === 'admin-dashboard' && <AdminDashboard onNavigate={navigateTo} />}
       </main>
 
       {/* Global Footer */}
-      <Footer onNavigate={(view) => setCurrentView(view)} />
-
-      {/* Persistent Floating AI Core Trigger Button */}
-      <button
-        onClick={() => setAiModalOpen(true)}
-        className="fixed bottom-6 right-6 z-40 p-3.5 sm:px-4 sm:py-3 rounded-full bg-[#0B1528] hover:bg-[#102447] text-white shadow-2xl border border-blue-500/40 flex items-center space-x-2.5 transition-all transform hover:scale-105 group"
-        title="Falar com o DESART AI Core"
-      >
-        <div className="relative">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#4599FF] animate-ping absolute -top-0.5 -right-0.5"></div>
-          <Bot className="w-5 h-5 text-[#4599FF]" />
-        </div>
-        <span className="hidden sm:inline text-xs font-bold font-display tracking-wider">
-          DESART AI CORE
-        </span>
-      </button>
-
-      {/* AI Assistant Modal Window */}
-      <AiAssistantModal 
-        isOpen={aiModalOpen}
-        onClose={() => setAiModalOpen(false)}
-      />
-
+      <Footer onNavigate={navigateTo} />
     </div>
   );
 }
